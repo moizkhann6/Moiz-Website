@@ -13,6 +13,16 @@ export default function Home() {
     hero_image_url: '/src/assets/hero.png',
     hero_button_label: 'Book a call',
     hero_button_path: '#newsletter-section',
+    hero_badge_text: '« Entrepreneur building systems »',
+    partners_title: 'My Trusted Partners',
+    profile_name: 'Moiz Riaz',
+    profile_title: 'ITSM Principal Consultant',
+    profile_badge: 'Systems Architect',
+    profile_link_text: 'moizriaz.net',
+    profile_link_path: 'mailto:contact@moizriaz.net',
+    profile_phone: '+966500000000',
+    profile_email: 'contact@moizriaz.net',
+    analytics_title: 'Analytics Growth',
     stats: [
       { id: '01', value: '8+', label: 'Years Experience', subtext: 'In enterprise operations' },
       { id: '02', value: '50+', label: 'Team Members', subtext: 'Managed at Teckflux' },
@@ -91,7 +101,7 @@ export default function Home() {
             
             {/* Left Content Column */}
             <div className="hero-content-left animate-slide-up">
-              <span className="about-badge">« Entrepreneur building systems »</span>
+              <span className="about-badge">{settings.hero_badge_text}</span>
               <h1>{settings.hero_headline}</h1>
               <p className="hero-sub">{settings.hero_subheadline}</p>
               
@@ -106,7 +116,7 @@ export default function Home() {
 
               {/* Trusted Partners Monochrome list */}
               <div className="partners-section-inline">
-                <p>My Trusted Partners</p>
+                <p>{settings.partners_title}</p>
                 <div className="partners-logo-row">
                   <span className="partner-logo-svg">Aramco</span>
                   <span className="partner-logo-svg">Neom</span>
@@ -119,26 +129,26 @@ export default function Home() {
             {/* Right Overlapping Cards Portrait Column */}
             <div className="hero-right-side animate-fade-in">
               <div className="hero-portrait-bg">
-                <img className="hero-portrait-img" src={settings.hero_image_url} alt="Moiz Riaz" />
+                <img className="hero-portrait-img" src={settings.hero_image_url} alt={settings.profile_name} />
                 
                 {/* Overlay Card 1: Contact profile card */}
                 <div className="card-overlay-contact">
                   <div className="contact-header">
-                    <img className="contact-avatar" src={settings.hero_image_url} alt="Moiz Profile" />
+                    <img className="contact-avatar" src={settings.hero_image_url} alt={settings.profile_name} />
                     <div className="contact-title">
-                      <h4>Moiz Riaz</h4>
-                      <p>ITSM Principal Consultant</p>
+                      <h4>{settings.profile_name}</h4>
+                      <p>{settings.profile_title}</p>
                     </div>
                   </div>
-                  <span className="contact-badge">Systems Architect</span>
+                  <span className="contact-badge">{settings.profile_badge}</span>
                   <div className="contact-info-links">
-                    Contact: <a href="mailto:contact@moizriaz.net">moizriaz.net</a>
+                    Contact: <a href={settings.profile_link_path}>{settings.profile_link_text}</a>
                   </div>
                   <div className="contact-actions">
-                    <a href="tel:+966500000000" className="btn-contact-action call">
+                    <a href={`tel:${settings.profile_phone}`} className="btn-contact-action call">
                       <Phone size={11} /> Call
                     </a>
-                    <a href="mailto:contact@moizriaz.net" className="btn-contact-action">
+                    <a href={`mailto:${settings.profile_email}`} className="btn-contact-action">
                       <Mail size={11} /> Mail
                     </a>
                   </div>
@@ -146,7 +156,7 @@ export default function Home() {
 
                 {/* Overlay Card 2: Growth Analytics stats card */}
                 <div className="card-overlay-analytics">
-                  <h4>Analytics Growth</h4>
+                  <h4>{settings.analytics_title}</h4>
                   <div className="analytics-list">
                     {settings.stats.map((stat, idx) => (
                       <div key={stat.id || idx} className="analytics-row">

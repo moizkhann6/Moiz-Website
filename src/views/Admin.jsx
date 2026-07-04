@@ -16,6 +16,16 @@ export default function Admin() {
     hero_image_url: '',
     hero_button_label: '',
     hero_button_path: '',
+    hero_badge_text: '',
+    partners_title: '',
+    profile_name: '',
+    profile_title: '',
+    profile_badge: '',
+    profile_link_text: '',
+    profile_link_path: '',
+    profile_phone: '',
+    profile_email: '',
+    analytics_title: '',
     consultation_label: '',
     consultation_path: '',
     nav_links: [],
@@ -98,6 +108,19 @@ export default function Admin() {
     } finally {
       setSavingSettings(false);
     }
+  };
+
+  const handleImageUpload = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setSettingsForm(prev => ({
+        ...prev,
+        hero_image_url: reader.result
+      }));
+    };
+    reader.readAsDataURL(file);
   };
 
   const handleLogin = async (e) => {
@@ -760,8 +783,65 @@ export default function Admin() {
             </div>
 
             <form onSubmit={handleSaveSettings} className="admin-form">
+              
+              {/* IMAGE UPLOADER */}
+              <div style={{ borderBottom: '1px solid var(--border-light)', paddingBottom: '1.5rem', marginBottom: '1.5rem' }}>
+                <h4 style={{ marginBottom: '1rem' }}>Hero Profile Portrait</h4>
+                <div className="form-group" style={{ marginBottom: '1.25rem' }}>
+                  <label>Portrait Image</label>
+                  <div style={{ display: 'flex', gap: '1.5rem', alignItems: 'center', marginTop: '0.5rem' }}>
+                    {settingsForm.hero_image_url && (
+                      <img 
+                        src={settingsForm.hero_image_url} 
+                        alt="Preview" 
+                        style={{ width: '80px', height: '80px', borderRadius: '12px', objectFit: 'cover', border: '1px solid var(--border-light)' }} 
+                      />
+                    )}
+                    <div>
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={handleImageUpload}
+                        style={{ display: 'none' }}
+                        id="hero-file-upload"
+                      />
+                      <label htmlFor="hero-file-upload" className="btn btn-secondary" style={{ cursor: 'pointer' }}>
+                        Upload Local Image
+                      </label>
+                      <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginLeft: '1rem' }}>
+                        Accepts PNG, JPG, WebP
+                      </span>
+                    </div>
+                  </div>
+                  <div style={{ marginTop: '0.75rem' }}>
+                    <label>Or Paste Public Image URL</label>
+                    <input
+                      type="text"
+                      className="form-control"
+                      value={settingsForm.hero_image_url}
+                      onChange={(e) => setSettingsForm({ ...settingsForm, hero_image_url: e.target.value })}
+                      placeholder="https://images.unsplash.com/photo-..."
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* HERO SECTION OPTIONS */}
               <div style={{ borderBottom: '1px solid var(--border-light)', paddingBottom: '1.5rem', marginBottom: '1.5rem' }}>
                 <h4 style={{ marginBottom: '1rem' }}>Hero Banner Content</h4>
+                
+                <div className="form-group" style={{ marginBottom: '1rem' }}>
+                  <label htmlFor="h_badge">Badge Top Label</label>
+                  <input
+                    type="text"
+                    id="h_badge"
+                    className="form-control"
+                    value={settingsForm.hero_badge_text}
+                    onChange={(e) => setSettingsForm({ ...settingsForm, hero_badge_text: e.target.value })}
+                    required
+                  />
+                </div>
+
                 <div className="form-group" style={{ marginBottom: '1rem' }}>
                   <label htmlFor="h_head">Hero Headline</label>
                   <input
@@ -788,17 +868,6 @@ export default function Admin() {
 
                 <div className="form-row">
                   <div className="form-group">
-                    <label htmlFor="h_img">Hero Image URL / Path</label>
-                    <input
-                      type="text"
-                      id="h_img"
-                      className="form-control"
-                      value={settingsForm.hero_image_url}
-                      onChange={(e) => setSettingsForm({ ...settingsForm, hero_image_url: e.target.value })}
-                      required
-                    />
-                  </div>
-                  <div className="form-group">
                     <label htmlFor="h_btn_lbl">Hero Button Label</label>
                     <input
                       type="text"
@@ -809,9 +878,6 @@ export default function Admin() {
                       required
                     />
                   </div>
-                </div>
-
-                <div className="form-row" style={{ marginTop: '1rem' }}>
                   <div className="form-group">
                     <label htmlFor="h_btn_pth">Hero Button Path / Anchor</label>
                     <input
@@ -823,6 +889,9 @@ export default function Admin() {
                       required
                     />
                   </div>
+                </div>
+
+                <div className="form-row" style={{ marginTop: '1rem' }}>
                   <div className="form-group">
                     <label htmlFor="h_con_lbl">Consultation Button Label</label>
                     <input
@@ -834,16 +903,130 @@ export default function Admin() {
                       required
                     />
                   </div>
+                  <div className="form-group">
+                    <label htmlFor="h_con_pth">Consultation Button Path</label>
+                    <input
+                      type="text"
+                      id="h_con_pth"
+                      className="form-control"
+                      value={settingsForm.consultation_path}
+                      onChange={(e) => setSettingsForm({ ...settingsForm, consultation_path: e.target.value })}
+                      required
+                    />
+                  </div>
                 </div>
 
                 <div className="form-group" style={{ marginTop: '1rem' }}>
-                  <label htmlFor="h_con_pth">Consultation Button Path / Anchor</label>
+                  <label htmlFor="h_partners_head">Partners Title Header</label>
                   <input
                     type="text"
-                    id="h_con_pth"
+                    id="h_partners_head"
                     className="form-control"
-                    value={settingsForm.consultation_path}
-                    onChange={(e) => setSettingsForm({ ...settingsForm, consultation_path: e.target.value })}
+                    value={settingsForm.partners_title}
+                    onChange={(e) => setSettingsForm({ ...settingsForm, partners_title: e.target.value })}
+                    required
+                  />
+                </div>
+              </div>
+
+              {/* OVERLAPPING FLOATING CARDS */}
+              <div style={{ borderBottom: '1px solid var(--border-light)', paddingBottom: '1.5rem', marginBottom: '1.5rem' }}>
+                <h4 style={{ marginBottom: '1rem' }}>Hero Floating Contact Card</h4>
+                <div className="form-row">
+                  <div className="form-group">
+                    <label htmlFor="p_name">Profile Name</label>
+                    <input
+                      type="text"
+                      id="p_name"
+                      className="form-control"
+                      value={settingsForm.profile_name}
+                      onChange={(e) => setSettingsForm({ ...settingsForm, profile_name: e.target.value })}
+                      required
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label htmlFor="p_title">Profile Role Description</label>
+                    <input
+                      type="text"
+                      id="p_title"
+                      className="form-control"
+                      value={settingsForm.profile_title}
+                      onChange={(e) => setSettingsForm({ ...settingsForm, profile_title: e.target.value })}
+                      required
+                    />
+                  </div>
+                </div>
+
+                <div className="form-row" style={{ marginTop: '1rem' }}>
+                  <div className="form-group">
+                    <label htmlFor="p_badge">Profile Badge tag</label>
+                    <input
+                      type="text"
+                      id="p_badge"
+                      className="form-control"
+                      value={settingsForm.profile_badge}
+                      onChange={(e) => setSettingsForm({ ...settingsForm, profile_badge: e.target.value })}
+                      required
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label htmlFor="p_link_lbl">Contact Link label</label>
+                    <input
+                      type="text"
+                      id="p_link_lbl"
+                      className="form-control"
+                      value={settingsForm.profile_link_text}
+                      onChange={(e) => setSettingsForm({ ...settingsForm, profile_link_text: e.target.value })}
+                      required
+                    />
+                  </div>
+                </div>
+
+                <div className="form-row" style={{ marginTop: '1rem' }}>
+                  <div className="form-group">
+                    <label htmlFor="p_link_pth">Contact Link path / mailto</label>
+                    <input
+                      type="text"
+                      id="p_link_pth"
+                      className="form-control"
+                      value={settingsForm.profile_link_path}
+                      onChange={(e) => setSettingsForm({ ...settingsForm, profile_link_path: e.target.value })}
+                      required
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label htmlFor="p_phone">Phone number</label>
+                    <input
+                      type="text"
+                      id="p_phone"
+                      className="form-control"
+                      value={settingsForm.profile_phone}
+                      onChange={(e) => setSettingsForm({ ...settingsForm, profile_phone: e.target.value })}
+                      required
+                    />
+                  </div>
+                </div>
+
+                <div className="form-group" style={{ marginTop: '1rem' }}>
+                  <label htmlFor="p_email">Email address</label>
+                  <input
+                    type="email"
+                    id="p_email"
+                    className="form-control"
+                    value={settingsForm.profile_email}
+                    onChange={(e) => setSettingsForm({ ...settingsForm, profile_email: e.target.value })}
+                    required
+                  />
+                </div>
+
+                <div className="form-group" style={{ marginTop: '1.5rem' }}>
+                  <label htmlFor="p_analytics_head">Floating Stats Panel Title</label>
+                  <input
+                    type="text"
+                    id="p_analytics_head"
+                    className="form-control"
+                    value={settingsForm.analytics_title}
+                    onChange={(e) => setSettingsForm({ ...settingsForm, analytics_title: e.target.value })}
                     required
                   />
                 </div>
