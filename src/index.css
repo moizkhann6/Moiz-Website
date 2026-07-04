@@ -536,17 +536,18 @@ button, input, textarea, select {
   display: block;
 }
 
-/* Floating Contact Card */
+/* Floating Contact Card - Staggered High Left */
 .card-overlay-contact {
   position: absolute;
-  bottom: 2rem;
-  left: -4rem;
+  top: 15%;
+  left: -5rem;
   width: 250px;
   background: #ffffff;
   border: 1px solid var(--border-light);
+  border-left: 3px solid #2dd4bf; /* Mint structural accent */
   border-radius: 12px;
   padding: 1.25rem;
-  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+  box-shadow: 0 12px 35px rgba(15, 23, 42, 0.06);
   z-index: 10;
   transition: var(--transition-normal);
   text-align: left;
@@ -554,6 +555,7 @@ button, input, textarea, select {
 
 .card-overlay-contact:hover {
   transform: translateY(-4px);
+  box-shadow: 0 16px 40px rgba(15, 23, 42, 0.09);
 }
 
 .contact-header {
@@ -640,17 +642,18 @@ button, input, textarea, select {
   border-color: var(--border-dark);
 }
 
-/* Floating Growth Analytics Card */
+/* Floating Growth Analytics Card - Staggered Low Right */
 .card-overlay-analytics {
   position: absolute;
-  bottom: -2rem;
-  right: -3rem;
+  bottom: 8%;
+  right: -5rem;
   width: 260px;
   background: #ffffff;
   border: 1px solid var(--border-light);
+  border-left: 3px solid var(--primary); /* Slate structural accent */
   border-radius: 12px;
   padding: 1.25rem;
-  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+  box-shadow: 0 12px 35px rgba(15, 23, 42, 0.06);
   z-index: 9;
   transition: var(--transition-normal);
   text-align: left;
@@ -658,6 +661,7 @@ button, input, textarea, select {
 
 .card-overlay-analytics:hover {
   transform: translateY(-4px);
+  box-shadow: 0 16px 40px rgba(15, 23, 42, 0.09);
 }
 
 .card-overlay-analytics h4 {
@@ -700,10 +704,21 @@ button, input, textarea, select {
 
 @media (max-width: 1200px) {
   .card-overlay-contact {
+    left: -2rem;
+  }
+  .card-overlay-analytics {
+    right: -2rem;
+  }
+}
+
+@media (max-width: 992px) {
+  .card-overlay-contact {
     left: -1rem;
+    top: 10%;
   }
   .card-overlay-analytics {
     right: -1rem;
+    bottom: 5%;
   }
 }
 
@@ -715,16 +730,16 @@ button, input, textarea, select {
   .card-overlay-contact {
     position: relative;
     left: 0;
-    bottom: 0;
+    top: 0;
     width: 100%;
-    margin-top: 1rem;
+    margin-top: 1.5rem;
   }
   .card-overlay-analytics {
     position: relative;
     right: 0;
     bottom: 0;
     width: 100%;
-    margin-top: 1rem;
+    margin-top: 1.5rem;
   }
 }
 
