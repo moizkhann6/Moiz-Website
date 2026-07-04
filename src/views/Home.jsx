@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, Send, Mail, Check } from 'lucide-react';
+import { ArrowRight, Send, Mail, Check, Phone } from 'lucide-react';
 import { db } from '../lib/db';
 
 export default function Home() {
@@ -88,38 +88,78 @@ export default function Home() {
       <section className="hero-section-flat">
         <div className="container">
           <div className="hero-split-grid">
+            
             {/* Left Content Column */}
             <div className="hero-content-left animate-slide-up">
-              <span className="about-badge">« Entrepreneur building businesses »</span>
+              <span className="about-badge">« Entrepreneur building systems »</span>
               <h1>{settings.hero_headline}</h1>
               <p className="hero-sub">{settings.hero_subheadline}</p>
               
-              <a href={settings.hero_button_path} className="btn-hero-pill">
-                <span>{settings.hero_button_label}</span>
-                <span className="arrow-circle">
-                  <ArrowRight size={18} />
-                </span>
-              </a>
+              <div className="hero-actions-row">
+                <a href={settings.hero_button_path} className="btn-mint">
+                  <span>{settings.hero_button_label}</span> <ArrowRight size={16} />
+                </a>
+                <Link to="/portfolio" className="btn-bordered">
+                  Work with me
+                </Link>
+              </div>
+
+              {/* Trusted Partners Monochrome list */}
+              <div className="partners-section-inline">
+                <p>My Trusted Partners</p>
+                <div className="partners-logo-row">
+                  <span className="partner-logo-svg">Aramco</span>
+                  <span className="partner-logo-svg">Neom</span>
+                  <span className="partner-logo-svg">GASCO</span>
+                  <span className="partner-logo-svg">SWCC</span>
+                </div>
+              </div>
             </div>
             
-            {/* Right Image Frame Column */}
+            {/* Right Overlapping Cards Portrait Column */}
             <div className="hero-right-side animate-fade-in">
-              <div className="hero-image-frame">
-                <img src={settings.hero_image_url} alt="Moiz Riaz" />
+              <div className="hero-portrait-bg">
+                <img className="hero-portrait-img" src={settings.hero_image_url} alt="Moiz Riaz" />
+                
+                {/* Overlay Card 1: Contact profile card */}
+                <div className="card-overlay-contact">
+                  <div className="contact-header">
+                    <img className="contact-avatar" src={settings.hero_image_url} alt="Moiz Profile" />
+                    <div className="contact-title">
+                      <h4>Moiz Riaz</h4>
+                      <p>ITSM Principal Consultant</p>
+                    </div>
+                  </div>
+                  <span className="contact-badge">Systems Architect</span>
+                  <div className="contact-info-links">
+                    Contact: <a href="mailto:contact@moizriaz.net">moizriaz.net</a>
+                  </div>
+                  <div className="contact-actions">
+                    <a href="tel:+966500000000" className="btn-contact-action call">
+                      <Phone size={11} /> Call
+                    </a>
+                    <a href="mailto:contact@moizriaz.net" className="btn-contact-action">
+                      <Mail size={11} /> Mail
+                    </a>
+                  </div>
+                </div>
+
+                {/* Overlay Card 2: Growth Analytics stats card */}
+                <div className="card-overlay-analytics">
+                  <h4>Analytics Growth</h4>
+                  <div className="analytics-list">
+                    {settings.stats.map((stat, idx) => (
+                      <div key={stat.id || idx} className="analytics-row">
+                        <span className="analytics-tag">{stat.value}</span>
+                        <span className="analytics-text">{stat.label}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
               </div>
             </div>
-          </div>
-          
-          {/* Horizontal Stats Strip */}
-          <div className="hero-stats-strip-flat">
-            {settings.stats.map((stat, idx) => (
-              <div key={stat.id || idx} className="stat-item-flat">
-                <span className="stat-num-idx">{stat.id}</span>
-                <span className="stat-val-flat">{stat.value}</span>
-                <span className="stat-lbl-flat">{stat.label}</span>
-                <span className="stat-desc-flat">{stat.subtext}</span>
-              </div>
-            ))}
+
           </div>
         </div>
       </section>
