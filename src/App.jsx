@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-route
 import Header from './components/Header';
 import Footer from './components/Footer';
 import Home from './views/Home';
+import About from './views/About';
 import Portfolio from './views/Portfolio';
 import Blog from './views/Blog';
 import Tools from './views/Tools';
@@ -28,6 +29,7 @@ export default function App() {
         <main className="main-content">
           <Routes>
             <Route path="/" element={<Home />} />
+            <Route path="/about" element={<About />} />
             <Route path="/portfolio" element={<Portfolio />} />
             <Route path="/blog" element={<Blog />} />
             <Route path="/tools" element={<Tools />} />

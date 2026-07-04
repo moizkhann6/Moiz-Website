@@ -1,20 +1,12 @@
 import React, { useState } from 'react';
 import { NavLink, Link } from 'react-router-dom';
-import { Menu, X, ArrowUpRight } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
 
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleMenu = () => setIsOpen(!isOpen);
   const closeMenu = () => setIsOpen(false);
-
-  const links = [
-    { path: '/', label: 'Home' },
-    { path: '/portfolio', label: 'Portfolio' },
-    { path: '/blog', label: 'Blog' },
-    { path: '/tools', label: 'Tools' },
-    { path: '/admin', label: 'Admin Panel' }
-  ];
 
   return (
     <header className="navbar">
@@ -25,41 +17,46 @@ export default function Header() {
 
         {/* Desktop Nav */}
         <nav className="nav-links desktop-only">
-          {links.map(link => (
-            <NavLink
-              key={link.path}
-              to={link.path}
-              className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
-            >
-              {link.label}
-            </NavLink>
-          ))}
-          <a href="#consulting-section" className="btn btn-primary btn-nav">
-            Consulting <ArrowUpRight size={16} />
+          <NavLink to="/" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}>
+            Home
+          </NavLink>
+          <NavLink to="/about" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}>
+            About
+          </NavLink>
+          <NavLink to="/portfolio" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}>
+            Portfolio
+          </NavLink>
+          <span className="nav-link-disabled" title="Launching soon">
+            Tools (Coming Soon)
+          </span>
+          <a href="/#newsletter-section" className="nav-link">
+            Newsletter
           </a>
         </nav>
 
         {/* Mobile Toggle */}
         <button className="mobile-toggle" onClick={toggleMenu} aria-label="Toggle menu">
-          {isOpen ? <X size={24} /> : <Menu size={24} />}
+          {isOpen ? <X size={22} /> : <Menu size={22} />}
         </button>
 
         {/* Mobile Nav Overlay */}
         {isOpen && (
-          <div className="mobile-nav-overlay animate-fade-in">
+          <div className="mobile-nav-overlay">
             <nav className="mobile-nav-links">
-              {links.map(link => (
-                <NavLink
-                  key={link.path}
-                  to={link.path}
-                  className={({ isActive }) => `mobile-nav-link ${isActive ? 'active' : ''}`}
-                  onClick={closeMenu}
-                >
-                  {link.label}
-                </NavLink>
-              ))}
-              <a href="#consulting-section" className="btn btn-primary" onClick={closeMenu}>
-                Consulting <ArrowUpRight size={16} />
+              <Link to="/" className="mobile-nav-link" onClick={closeMenu}>
+                Home
+              </Link>
+              <Link to="/about" className="mobile-nav-link" onClick={closeMenu}>
+                About
+              </Link>
+              <Link to="/portfolio" className="mobile-nav-link" onClick={closeMenu}>
+                Portfolio
+              </Link>
+              <span className="mobile-nav-link-disabled">
+                Tools (Coming Soon)
+              </span>
+              <a href="/#newsletter-section" className="mobile-nav-link" onClick={closeMenu}>
+                Newsletter
               </a>
             </nav>
           </div>
@@ -81,11 +78,6 @@ export default function Header() {
           z-index: 101;
         }
 
-        .btn-nav {
-          padding: 0.5rem 1.25rem;
-          font-size: 0.85rem;
-        }
-
         /* Mobile Nav styling */
         @media (max-width: 768px) {
           .desktop-only {
@@ -98,35 +90,44 @@ export default function Header() {
 
           .mobile-nav-overlay {
             position: fixed;
-            top: 0;
+            top: 70px; /* Right below the header */
             left: 0;
             right: 0;
             bottom: 0;
-            height: 100vh;
             background: var(--bg-primary);
             z-index: 99;
             display: flex;
-            align-items: center;
-            justify-content: center;
+            align-items: flex-start;
+            padding: 3rem 2rem;
+            border-top: 1px solid var(--border-light);
           }
 
           .mobile-nav-links {
             display: flex;
             flex-direction: column;
-            align-items: center;
-            gap: 2rem;
+            align-items: flex-start;
+            gap: 1.75rem;
             width: 100%;
           }
 
           .mobile-nav-link {
             font-family: var(--font-heading);
-            font-size: 1.5rem;
-            font-weight: 600;
+            font-size: 1.25rem;
+            font-weight: 700;
             color: var(--text-secondary);
+            width: 100%;
+            border-bottom: 1px solid var(--border-light);
+            padding-bottom: 0.5rem;
           }
 
-          .mobile-nav-link.active {
-            color: var(--primary);
+          .mobile-nav-link-disabled {
+            font-family: var(--font-heading);
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            width: 100%;
+            border-bottom: 1px solid var(--border-light);
+            padding-bottom: 0.5rem;
           }
         }
       `}</style>
