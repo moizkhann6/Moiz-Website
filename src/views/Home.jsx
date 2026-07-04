@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, Send, Mail, Check } from 'lucide-react';
+import { ArrowRight, Send, Mail, Check, ChevronRight } from 'lucide-react';
 
 export default function Home() {
   const [email, setEmail] = useState('');
   const [subscribed, setSubscribed] = useState(false);
+  const [activeExpTab, setActiveExpTab] = useState(0);
 
   const handleSubscribe = (e) => {
     e.preventDefault();
@@ -17,36 +18,46 @@ export default function Home() {
     }
   };
 
-  const timelineEvents = [
+  const experienceDeck = [
     {
       year: '2026 - Present',
       role: 'Principal ITSM Consultant',
-      company: 'GASCO (Saudi Arabia)',
-      story: 'Consulting GASCO on upgrading, stabilizing, and re-architecting their BMC Helix ITSM systems. Implementing ITIL best practices and driving organizational adoption.'
+      company: 'GASCO (Riyadh)',
+      metrics: 'ITSM Transformation',
+      story: 'Advising National Gas & Industrialization Co. (GASCO) on critical BMC Helix ITSM architecture. Re-architecting database schemas, resolving performance bottlenecks, and guiding legacy technical engineers to adopt modern, agile ITIL-aligned operations.',
+      challenge: 'Overcoming deep-rooted cultural resistance to digital systems and standardizing ticket routing across distributed utilities.'
     },
     {
       year: '2024 - 2025',
       role: 'Operations & Tech Director',
       company: 'Najoom Al Falah Trading Co. (Riyadh)',
-      story: 'Expanded operations from simple electrical supplies to multi-discipline supply streams (MEP, Gym, Furniture). Scaled annual recurring revenue to 6 Million SAR, built online e-commerce channels, and onboarded enterprise clients including Saudi Aramco, Neom, and Red Sea Global.'
+      metrics: '6M SAR ARR Scaled',
+      story: 'Expanded operations from small-scale electrical supply to full-scope industrial procurement (MEP, Gym Equipment, Mechanical, Furniture). Managed supply-chain logistics, launched their e-commerce store, and successfully onboarded tier-1 clients including Saudi Aramco, Neom, Red Sea Global, and SWCC.',
+      challenge: 'Navigating complex B2B compliance and bidding audits for mega-projects in Saudi Arabia.'
     },
     {
       year: '2022 - 2023',
       role: 'Founder & Director',
-      company: 'Teckflux (IT Services Startup)',
-      story: 'Built and scaled an IT services agency in Karachi to a 50-person team of designers, engineers, and PMs. Delivered custom CMS engines, mobile apps, and workforce management architectures to US/UK clients, peaking at $80k MRR.'
+      company: 'Teckflux ( Karachi)',
+      metrics: 'Grew to 50-Person Agency',
+      story: 'Founded and scaled an IT services startup in Karachi. Hired and aligned developers, designers, and sales representatives. Delivered custom CMS software, mobile applications, and workforce engines to US and UK clients, reaching $80k USD monthly recurring revenue.',
+      challenge: 'Handling macroeconomic cash flow bottlenecks and agency scaling challenges, which eventually led to closing the startup.'
     },
     {
       year: '2021',
       role: 'Branding & Marketing Lead',
       company: 'TaskTak (US Product Company)',
-      story: 'Directed product marketing and visual brand identity for TaskTak\'s Business Management Platform (BMP), translating engineering metrics into clear commercial copy.'
+      metrics: 'Product Launch & BMP Scale',
+      story: 'Managed corporate branding, visual design language, and marketing assets for TaskTak\'s SaaS Business Management Platform (BMP). Aligned UX wireframes and advertising campaigns to position the software in international markets.',
+      challenge: 'Simplifying complex technical database capabilities into high-converting marketing value propositions.'
     },
     {
       year: '2019 - 2020',
       role: 'Graphic UI/UX Executive & Consultant',
-      company: 'Logicose, Tafsol, Forsit Global (Korea), TypeB Studio (US)',
-      story: 'Consulted on Amazon store interfaces, wireframed B2B landing pages, and directed executive UX strategies for local and remote companies.'
+      company: 'Logicose, Tafsol, Forsit Global (Korea)',
+      metrics: 'Global UI/UX Advisory',
+      story: 'Designed executive interfaces, conducted B2B wireframing tests, and consulted Korean firm Forsit Global on remote Amazon e-commerce store visuals. Directed cross-functional team designs for US agencies.',
+      challenge: 'Managing remote stakeholder requirements and balancing strict visual quality with development sprint timings.'
     }
   ];
 
@@ -71,55 +82,76 @@ export default function Home() {
         </div>
       </section>
 
-      {/* CLIENT BRANDS */}
+      {/* CLIENT BRANDS (Infinite Unlimited Scrolling Marquee) */}
       <section className="brands-flat">
         <div className="container">
           <h2 className="section-title-flat">Select Client Engagements</h2>
-          <div className="brands-list-flat">
+        </div>
+        <div className="marquee-container">
+          <div className="marquee-content">
+            {/* First Set */}
             <span>Saudi Aramco</span>
             <span>Neom</span>
             <span>GASCO</span>
             <span>Red Sea Global</span>
             <span>Nike</span>
             <span>SWCC</span>
+            <span>Al Khorayef Group</span>
+            <span>Crowdwrks</span>
+            
+            {/* Duplicated Set for Infinite Loop */}
+            <span>Saudi Aramco</span>
+            <span>Neom</span>
+            <span>GASCO</span>
+            <span>Red Sea Global</span>
+            <span>Nike</span>
+            <span>SWCC</span>
+            <span>Al Khorayef Group</span>
+            <span>Crowdwrks</span>
           </div>
         </div>
       </section>
 
-      {/* ROADMAP / TIMELINE */}
+      {/* INTERACTIVE EXPERIENCE DECK (Replaces CV timeline) */}
       <section className="timeline-flat-section">
         <div className="container">
-          <h2 className="section-title-flat">Career Focus & Timeline</h2>
-          <div className="timeline-list-vertical">
-            {timelineEvents.map((event, idx) => (
-              <div key={idx} className="timeline-item-flat">
-                <div className="timeline-meta">
-                  <span className="timeline-year">{event.year}</span>
-                </div>
-                <div className="timeline-details">
-                  <h3>{event.role}</h3>
-                  <h4>{event.company}</h4>
-                  <p>{event.story}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* LABS SECTION */}
-      <section className="labs-section">
-        <div className="container">
-          <h2 className="section-title-flat">Labs</h2>
-          <p className="labs-desc">Automated tools, utilities, and applications currently under active research and build cycles.</p>
+          <h2 className="section-title-flat">Career Focus & Milestones</h2>
           
-          <div className="labs-grid">
-            <div className="labs-card-flat">
-              <div className="labs-card-header">
-                <h3>Procurement Automations</h3>
-                <span className="badge-coming">Coming Soon</span>
+          <div className="exp-deck-grid">
+            {/* Tab Selector Sidebar */}
+            <div className="exp-sidebar">
+              {experienceDeck.map((exp, idx) => (
+                <button
+                  key={idx}
+                  className={`exp-tab-btn ${activeExpTab === idx ? 'active' : ''}`}
+                  onClick={() => setActiveExpTab(idx)}
+                >
+                  <span>{exp.company.split(' ')[0]}</span>
+                  <span className="exp-tab-year">{exp.year.split(' ')[0]}</span>
+                </button>
+              ))}
+            </div>
+
+            {/* Selected Card display */}
+            <div className="exp-card-flat animate-fade-in" key={activeExpTab}>
+              <div>
+                <div className="exp-meta-row">
+                  <span>{experienceDeck[activeExpTab].year}</span>
+                  <span>{experienceDeck[activeExpTab].company}</span>
+                </div>
+                <div className="exp-card-header">
+                  <h3>{experienceDeck[activeExpTab].role}</h3>
+                  <h4>{experienceDeck[activeExpTab].metrics}</h4>
+                </div>
+                <div className="exp-body-flat">
+                  <p>{experienceDeck[activeExpTab].story}</p>
+                  <p><strong>Core Challenge:</strong> {experienceDeck[activeExpTab].challenge}</p>
+                </div>
               </div>
-              <p>Building the next generation of automated procurement and efficiency tools to streamline material supply pipelines.</p>
+              
+              <div className="exp-metrics-badge">
+                <Check size={16} /> <span>Verified Achievement</span>
+              </div>
             </div>
           </div>
         </div>
@@ -156,6 +188,7 @@ export default function Home() {
           </div>
         </div>
       </section>
+      
     </div>
   );
 }

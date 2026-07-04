@@ -26,9 +26,6 @@ export default function Header() {
           <NavLink to="/portfolio" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}>
             Portfolio
           </NavLink>
-          <span className="nav-link-disabled" title="Launching soon">
-            Tools (Coming Soon)
-          </span>
           <a href="/#newsletter-section" className="nav-link">
             Newsletter
           </a>
@@ -52,9 +49,6 @@ export default function Header() {
               <Link to="/portfolio" className="mobile-nav-link" onClick={closeMenu}>
                 Portfolio
               </Link>
-              <span className="mobile-nav-link-disabled">
-                Tools (Coming Soon)
-              </span>
               <a href="/#newsletter-section" className="mobile-nav-link" onClick={closeMenu}>
                 Newsletter
               </a>
