@@ -23,8 +23,9 @@ CREATE POLICY "Allow public read access on portfolio"
 ON portfolio FOR SELECT USING (true);
 
 -- Allow authenticated user write access (Admin)
-CREATE POLICY "Allow authenticated write access on portfolio" 
-ON portfolio FOR ALL USING (auth.role() = 'authenticated');
+CREATE POLICY "Allow authenticated insert on portfolio" ON portfolio FOR INSERT TO authenticated WITH CHECK (true);
+CREATE POLICY "Allow authenticated update on portfolio" ON portfolio FOR UPDATE TO authenticated USING (true) WITH CHECK (true);
+CREATE POLICY "Allow authenticated delete on portfolio" ON portfolio FOR DELETE TO authenticated USING (true);
 
 
 -- 2. Create Blogs Table
@@ -47,8 +48,9 @@ CREATE POLICY "Allow public read access on blogs"
 ON blogs FOR SELECT USING (status = 'published');
 
 -- Allow authenticated user write access on blogs (Admin)
-CREATE POLICY "Allow authenticated write access on blogs" 
-ON blogs FOR ALL USING (auth.role() = 'authenticated');
+CREATE POLICY "Allow authenticated insert on blogs" ON blogs FOR INSERT TO authenticated WITH CHECK (true);
+CREATE POLICY "Allow authenticated update on blogs" ON blogs FOR UPDATE TO authenticated USING (true) WITH CHECK (true);
+CREATE POLICY "Allow authenticated delete on blogs" ON blogs FOR DELETE TO authenticated USING (true);
 
 
 -- 3. Create Consulting Services Table
@@ -63,7 +65,9 @@ CREATE TABLE IF NOT EXISTS consulting_services (
 
 ALTER TABLE consulting_services ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Allow public read access on consulting" ON consulting_services FOR SELECT USING (true);
-CREATE POLICY "Allow authenticated write access on consulting" ON consulting_services FOR ALL USING (auth.role() = 'authenticated');
+CREATE POLICY "Allow authenticated insert on consulting" ON consulting_services FOR INSERT TO authenticated WITH CHECK (true);
+CREATE POLICY "Allow authenticated update on consulting" ON consulting_services FOR UPDATE TO authenticated USING (true) WITH CHECK (true);
+CREATE POLICY "Allow authenticated delete on consulting" ON consulting_services FOR DELETE TO authenticated USING (true);
 
 
 -- 4. Pre-populate initial data (Optional/Default Setup)
@@ -93,7 +97,9 @@ CREATE TABLE IF NOT EXISTS profile_settings (
 -- Enable RLS
 ALTER TABLE profile_settings ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Allow public read access on settings" ON profile_settings FOR SELECT USING (true);
-CREATE POLICY "Allow authenticated write access on settings" ON profile_settings FOR ALL USING (auth.role() = 'authenticated');
+CREATE POLICY "Allow authenticated insert on settings" ON profile_settings FOR INSERT TO authenticated WITH CHECK (true);
+CREATE POLICY "Allow authenticated update on settings" ON profile_settings FOR UPDATE TO authenticated USING (true) WITH CHECK (true);
+CREATE POLICY "Allow authenticated delete on settings" ON profile_settings FOR DELETE TO authenticated USING (true);
 
 -- Seed settings
 INSERT INTO profile_settings (key, value) VALUES
