@@ -67,7 +67,7 @@ CREATE POLICY "Allow authenticated write access on consulting" ON consulting_ser
 
 
 -- 4. Pre-populate initial data (Optional/Default Setup)
-INSERT INTO portfolio (title, description, category, tech_stack, client, role, results, link) VALUES
+INSERT INTO portfolio (title, description, category, tech_stack, client, role, results) VALUES
 ('TaskTak Business Management Platform (BMP)', 'Designed complete branding, UX, and marketing materials for the US-based BMP platform, establishing a coherent and high-converting visual language.', 'Branding & Marketing', ARRAY['Figma', 'Adobe Illustrator', 'Branding', 'Product Design'], 'TaskTak', 'Lead Branding & Marketing Designer', 'Created modern software UI templates and brand materials that drove the product release in the US and Karachi offices.'),
 ('Teckflux CMS & Workforce Management Systems', 'Founded and scaled Teckflux, an IT services company, to 50 employees, delivering key enterprise systems including custom CMS, mobile apps, and workforce planning systems.', 'Web Apps', ARRAY['React', 'Node.js', 'PostgreSQL', 'Workforce Management', 'CMS'], 'Multiple US/UK Clients', 'Founder & Director', 'Delivered over 30 projects successfully, scaling operations to a monthly revenue of $80k USD.'),
 ('Najoom Al Falah Enterprise Store & Online Presence', 'Expanded building materials and MEP supplies catalogs, designed and implemented their online store, and onboarded mega-scale Middle-East clients.', 'ITSM & Enterprise', ARRAY['E-Commerce', 'PHP', 'SEO', 'Aramco Integration', 'Supply Chain Management'], 'Najoom Al Falah Trading Co.', 'Operations & Tech Director', 'Scaled company ARR to 6 Million SAR; onboarded clients like Saudi Aramco, Neom, Red Sea Global, and SWCC.'),
