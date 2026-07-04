@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { db, isSupabaseConfigured } from '../lib/db';
-import { ShieldAlert, Plus, Trash2, Edit2, LogOut, Database, Save, CheckCircle, RotateCcw, AlertTriangle, Layers, BookOpen } from 'lucide-react';
+import { ShieldAlert, Plus, Trash2, Edit2, LogOut, Database, Save, CheckCircle, RotateCcw, AlertTriangle, Layers, BookOpen, Settings } from 'lucide-react';
 
 export default function Admin() {
   const [user, setUser] = useState(null);
@@ -9,6 +9,19 @@ export default function Admin() {
   const [password, setPassword] = useState('');
   const [authError, setAuthError] = useState('');
   const [activeTab, setActiveTab] = useState('portfolio'); // 'portfolio', 'blogs', 'status'
+
+  const [settingsForm, setSettingsForm] = useState({
+    hero_headline: '',
+    hero_subheadline: '',
+    hero_image_url: '',
+    hero_button_label: '',
+    hero_button_path: '',
+    consultation_label: '',
+    consultation_path: '',
+    nav_links: [],
+    stats: []
+  });
+  const [savingSettings, setSavingSettings] = useState(false);
 
   // Data states
   const [portfolio, setPortfolio] = useState([]);
@@ -63,8 +76,27 @@ export default function Admin() {
       const blogData = await db.getBlogs();
       setPortfolio(portfolioData);
       setBlogs(blogData);
+      
+      const settingsData = await db.getSettings();
+      setSettingsForm(settingsData);
     } catch (err) {
       console.error("Error loading admin data", err);
+    }
+  };
+
+  const handleSaveSettings = async (e) => {
+    e.preventDefault();
+    setSavingSettings(true);
+    setStatusMessage('');
+    try {
+      await db.saveSettings(settingsForm);
+      setStatusMessage('Site Settings updated successfully!');
+      setTimeout(() => setStatusMessage(''), 4000);
+    } catch (err) {
+      console.error("Failed to save settings", err);
+      setStatusMessage('Error saving settings: ' + err.message);
+    } finally {
+      setSavingSettings(false);
     }
   };
 
@@ -405,6 +437,12 @@ export default function Admin() {
           <BookOpen size={16} /> Blog Writer ({blogs.length})
         </button>
         <button
+          className={`admin-tab ${activeTab === 'settings' ? 'active' : ''}`}
+          onClick={() => setActiveTab('settings')}
+        >
+          <Settings size={16} /> Site Settings
+        </button>
+        <button
           className={`admin-tab ${activeTab === 'status' ? 'active' : ''}`}
           onClick={() => setActiveTab('status')}
         >
@@ -706,6 +744,206 @@ export default function Admin() {
 
               <button type="submit" className="btn btn-primary">
                 <Save size={16} /> Save Article
+              </button>
+            </form>
+          </div>
+        )}
+
+        {/* --- SITE SETTINGS TAB --- */}
+        {activeTab === 'settings' && (
+          <div className="tab-pane">
+            <div className="tab-pane-header">
+              <h3>Global Site Settings</h3>
+              <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>
+                Manage navigation links, CTA paths, hero headline/subheadline, profile portrait, and stats numbers.
+              </p>
+            </div>
+
+            <form onSubmit={handleSaveSettings} className="admin-form">
+              <div style={{ borderBottom: '1px solid var(--border-light)', paddingBottom: '1.5rem', marginBottom: '1.5rem' }}>
+                <h4 style={{ marginBottom: '1rem' }}>Hero Banner Content</h4>
+                <div className="form-group" style={{ marginBottom: '1rem' }}>
+                  <label htmlFor="h_head">Hero Headline</label>
+                  <input
+                    type="text"
+                    id="h_head"
+                    className="form-control"
+                    value={settingsForm.hero_headline}
+                    onChange={(e) => setSettingsForm({ ...settingsForm, hero_headline: e.target.value })}
+                    required
+                  />
+                </div>
+                
+                <div className="form-group" style={{ marginBottom: '1rem' }}>
+                  <label htmlFor="h_sub">Hero Sub-headline</label>
+                  <input
+                    type="text"
+                    id="h_sub"
+                    className="form-control"
+                    value={settingsForm.hero_subheadline}
+                    onChange={(e) => setSettingsForm({ ...settingsForm, hero_subheadline: e.target.value })}
+                    required
+                  />
+                </div>
+
+                <div className="form-row">
+                  <div className="form-group">
+                    <label htmlFor="h_img">Hero Image URL / Path</label>
+                    <input
+                      type="text"
+                      id="h_img"
+                      className="form-control"
+                      value={settingsForm.hero_image_url}
+                      onChange={(e) => setSettingsForm({ ...settingsForm, hero_image_url: e.target.value })}
+                      required
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label htmlFor="h_btn_lbl">Hero Button Label</label>
+                    <input
+                      type="text"
+                      id="h_btn_lbl"
+                      className="form-control"
+                      value={settingsForm.hero_button_label}
+                      onChange={(e) => setSettingsForm({ ...settingsForm, hero_button_label: e.target.value })}
+                      required
+                    />
+                  </div>
+                </div>
+
+                <div className="form-row" style={{ marginTop: '1rem' }}>
+                  <div className="form-group">
+                    <label htmlFor="h_btn_pth">Hero Button Path / Anchor</label>
+                    <input
+                      type="text"
+                      id="h_btn_pth"
+                      className="form-control"
+                      value={settingsForm.hero_button_path}
+                      onChange={(e) => setSettingsForm({ ...settingsForm, hero_button_path: e.target.value })}
+                      required
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label htmlFor="h_con_lbl">Consultation Button Label</label>
+                    <input
+                      type="text"
+                      id="h_con_lbl"
+                      className="form-control"
+                      value={settingsForm.consultation_label}
+                      onChange={(e) => setSettingsForm({ ...settingsForm, consultation_label: e.target.value })}
+                      required
+                    />
+                  </div>
+                </div>
+
+                <div className="form-group" style={{ marginTop: '1rem' }}>
+                  <label htmlFor="h_con_pth">Consultation Button Path / Anchor</label>
+                  <input
+                    type="text"
+                    id="h_con_pth"
+                    className="form-control"
+                    value={settingsForm.consultation_path}
+                    onChange={(e) => setSettingsForm({ ...settingsForm, consultation_path: e.target.value })}
+                    required
+                  />
+                </div>
+              </div>
+
+              {/* NAVIGATION LINKS SECTION */}
+              <div style={{ borderBottom: '1px solid var(--border-light)', paddingBottom: '1.5rem', marginBottom: '1.5rem' }}>
+                <h4 style={{ marginBottom: '1rem' }}>Header Navigation Links (Max 5)</h4>
+                {settingsForm.nav_links && settingsForm.nav_links.map((link, idx) => (
+                  <div key={idx} className="form-row" style={{ marginBottom: '1rem' }}>
+                    <div className="form-group">
+                      <label>Link {idx + 1} Label</label>
+                      <input
+                        type="text"
+                        className="form-control"
+                        value={link.label}
+                        onChange={(e) => {
+                          const newLinks = [...settingsForm.nav_links];
+                          newLinks[idx].label = e.target.value;
+                          setSettingsForm({ ...settingsForm, nav_links: newLinks });
+                        }}
+                        required
+                      />
+                    </div>
+                    <div className="form-group">
+                      <label>Link {idx + 1} Path</label>
+                      <input
+                        type="text"
+                        className="form-control"
+                        value={link.path}
+                        onChange={(e) => {
+                          const newLinks = [...settingsForm.nav_links];
+                          newLinks[idx].path = e.target.value;
+                          setSettingsForm({ ...settingsForm, nav_links: newLinks });
+                        }}
+                        required
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* HERO STATS STRIP SECTION */}
+              <div style={{ borderBottom: '1px solid var(--border-light)', paddingBottom: '1.5rem', marginBottom: '1.5rem' }}>
+                <h4 style={{ marginBottom: '1rem' }}>Hero Stats Data Strip (Exactly 4 stats)</h4>
+                {settingsForm.stats && settingsForm.stats.map((stat, idx) => (
+                  <div key={stat.id || idx} style={{ border: '1px solid var(--border-light)', padding: '1.25rem', borderRadius: 'var(--radius-md)', marginBottom: '1rem', background: 'var(--bg-primary)' }}>
+                    <h5 style={{ marginBottom: '0.75rem', color: 'var(--primary)' }}>Stat #{stat.id}</h5>
+                    <div className="form-row">
+                      <div className="form-group">
+                        <label>Numeric Value (e.g. 500+)</label>
+                        <input
+                          type="text"
+                          className="form-control"
+                          value={stat.value}
+                          onChange={(e) => {
+                            const newStats = [...settingsForm.stats];
+                            newStats[idx].value = e.target.value;
+                            setSettingsForm({ ...settingsForm, stats: newStats });
+                          }}
+                          required
+                        />
+                      </div>
+                      <div className="form-group">
+                        <label>Label Title</label>
+                        <input
+                          type="text"
+                          className="form-control"
+                          value={stat.label}
+                          onChange={(e) => {
+                            const newStats = [...settingsForm.stats];
+                            newStats[idx].label = e.target.value;
+                            setSettingsForm({ ...settingsForm, stats: newStats });
+                          }}
+                          required
+                        />
+                      </div>
+                    </div>
+                    <div className="form-group" style={{ marginTop: '0.75rem' }}>
+                      <label>Description Subtext</label>
+                      <input
+                        type="text"
+                        className="form-control"
+                        value={stat.subtext}
+                        onChange={(e) => {
+                          const newStats = [...settingsForm.stats];
+                          newStats[idx].subtext = e.target.value;
+                          setSettingsForm({ ...settingsForm, stats: newStats });
+                        }}
+                        required
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {statusMessage && <div className="status-banner-form">{statusMessage}</div>}
+
+              <button type="submit" className="btn btn-primary" disabled={savingSettings}>
+                <Save size={16} /> {savingSettings ? 'Saving Settings...' : 'Save Site Settings'}
               </button>
             </form>
           </div>

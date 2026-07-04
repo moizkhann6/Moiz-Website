@@ -1,11 +1,31 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, Send, Mail, Check, ChevronRight } from 'lucide-react';
+import { ArrowRight, Send, Mail, Check } from 'lucide-react';
+import { db } from '../lib/db';
 
 export default function Home() {
   const [email, setEmail] = useState('');
   const [subscribed, setSubscribed] = useState(false);
   const [activeExpTab, setActiveExpTab] = useState(0);
+  const [settings, setSettings] = useState({
+    hero_headline: 'Building the Future of Digital Systems.',
+    hero_subheadline: 'Entrepreneur, Designer, and Systems Architect.',
+    hero_image_url: '/src/assets/hero.png',
+    hero_button_label: 'Book a call',
+    hero_button_path: '#newsletter-section',
+    stats: [
+      { id: '01', value: '8+', label: 'Years Experience', subtext: 'In enterprise operations' },
+      { id: '02', value: '50+', label: 'Team Members', subtext: 'Managed at Teckflux' },
+      { id: '03', value: '6M SAR', label: 'ARR Scaled', subtext: 'At Najoom Al Falah' },
+      { id: '04', value: '100%', label: 'SLA Met', subtext: 'For GASCO Helix ITSM' }
+    ]
+  });
+
+  useEffect(() => {
+    db.getSettings().then(data => {
+      if (data) setSettings(data);
+    }).catch(err => console.error("Error loading home settings:", err));
+  }, []);
 
   const handleSubscribe = (e) => {
     e.preventDefault();
@@ -38,7 +58,7 @@ export default function Home() {
     {
       year: '2022 - 2023',
       role: 'Founder & Director',
-      company: 'Teckflux ( Karachi)',
+      company: 'Teckflux (Karachi)',
       metrics: 'Grew to 50-Person Agency',
       story: 'Founded and scaled an IT services startup in Karachi. Hired and aligned developers, designers, and sales representatives. Delivered custom CMS software, mobile applications, and workforce engines to US and UK clients, reaching $80k USD monthly recurring revenue.',
       challenge: 'Handling macroeconomic cash flow bottlenecks and agency scaling challenges, which eventually led to closing the startup.'
@@ -64,20 +84,42 @@ export default function Home() {
   return (
     <div className="home-view animate-fade-in">
       
-      {/* HERO SECTION */}
+      {/* SPLIT HERO SECTION */}
       <section className="hero-section-flat">
         <div className="container">
-          <div className="hero-content-left">
-            <h1>Building the Future of Digital Systems & Ventures.</h1>
-            <p className="hero-sub">Entrepreneur, Designer, and Systems Architect based in Riyadh.</p>
-            <div className="hero-actions-left">
-              <Link to="/portfolio" className="btn btn-primary">
-                View Portfolio <ArrowRight size={16} />
-              </Link>
-              <Link to="/about" className="btn btn-secondary">
-                Read Journey
-              </Link>
+          <div className="hero-split-grid">
+            {/* Left Content Column */}
+            <div className="hero-content-left animate-slide-up">
+              <span className="about-badge">« Entrepreneur building businesses »</span>
+              <h1>{settings.hero_headline}</h1>
+              <p className="hero-sub">{settings.hero_subheadline}</p>
+              
+              <a href={settings.hero_button_path} className="btn-hero-pill">
+                <span>{settings.hero_button_label}</span>
+                <span className="arrow-circle">
+                  <ArrowRight size={18} />
+                </span>
+              </a>
             </div>
+            
+            {/* Right Image Frame Column */}
+            <div className="hero-right-side animate-fade-in">
+              <div className="hero-image-frame">
+                <img src={settings.hero_image_url} alt="Moiz Riaz" />
+              </div>
+            </div>
+          </div>
+          
+          {/* Horizontal Stats Strip */}
+          <div className="hero-stats-strip-flat">
+            {settings.stats.map((stat, idx) => (
+              <div key={stat.id || idx} className="stat-item-flat">
+                <span className="stat-num-idx">{stat.id}</span>
+                <span className="stat-val-flat">{stat.value}</span>
+                <span className="stat-lbl-flat">{stat.label}</span>
+                <span className="stat-desc-flat">{stat.subtext}</span>
+              </div>
+            ))}
           </div>
         </div>
       </section>
@@ -112,7 +154,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* INTERACTIVE EXPERIENCE DECK (Replaces CV timeline) */}
+      {/* INTERACTIVE EXPERIENCE DECK */}
       <section className="timeline-flat-section">
         <div className="container">
           <h2 className="section-title-flat">Career Focus & Milestones</h2>

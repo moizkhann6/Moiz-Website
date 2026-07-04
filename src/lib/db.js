@@ -158,6 +158,29 @@ const initialConsulting = [
   }
 ];
 
+const defaultSettings = {
+  nav_links: [
+    { label: 'Home', path: '/' },
+    { label: 'About', path: '/about' },
+    { label: 'Portfolio', path: '/portfolio' },
+    { label: 'Labs', path: '/#labs-section' },
+    { label: 'Newsletter', path: '/#newsletter-section' }
+  ],
+  consultation_label: 'Book a Consultation',
+  consultation_path: '#newsletter-section',
+  hero_image_url: '/src/assets/hero.png',
+  hero_headline: 'Building the Future of Digital Systems.',
+  hero_subheadline: 'Entrepreneur, Designer, and Systems Architect.',
+  hero_button_label: 'Book a call',
+  hero_button_path: '#newsletter-section',
+  stats: [
+    { id: '01', value: '8+', label: 'Years Experience', subtext: 'In enterprise operations' },
+    { id: '02', value: '50+', label: 'Team Members', subtext: 'Managed at Teckflux' },
+    { id: '03', value: '6M SAR', label: 'ARR Scaled', subtext: 'At Najoom Al Falah' },
+    { id: '04', value: '100%', label: 'SLA Met', subtext: 'For GASCO Helix ITSM' }
+  ]
+};
+
 // Local Storage Helper
 const getLocal = (key, fallback) => {
   const data = localStorage.getItem(key);
@@ -176,6 +199,42 @@ const setLocal = (key, val) => {
 const delay = (ms = 300) => new Promise(resolve => setTimeout(resolve, ms));
 
 export const db = {
+  // --- SETTINGS ---
+  async getSettings() {
+    if (isSupabaseConfigured) {
+      const { data, error } = await supabase
+        .from('profile_settings')
+        .select('*');
+      if (error) throw error;
+      const settings = {};
+      data.forEach(row => {
+        settings[row.key] = row.value;
+      });
+      return { ...defaultSettings, ...settings };
+    } else {
+      await delay();
+      return getLocal('moiz_settings', defaultSettings);
+    }
+  },
+
+  async saveSettings(settings) {
+    if (isSupabaseConfigured) {
+      const upserts = Object.keys(settings).map(key => ({
+        key,
+        value: settings[key]
+      }));
+      const { error } = await supabase
+        .from('profile_settings')
+        .upsert(upserts);
+      if (error) throw error;
+      return settings;
+    } else {
+      await delay();
+      setLocal('moiz_settings', settings);
+      return settings;
+    }
+  },
+
   // --- BLOGS ---
   async getBlogs() {
     if (isSupabaseConfigured) {

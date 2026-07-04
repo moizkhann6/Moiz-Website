@@ -82,3 +82,40 @@ INSERT INTO consulting_services (title, description, icon, benefits) VALUES
 ('Business & Scale Strategy', 'Consulting on operational scaling, agency growth, and building high-performance tech teams based on years of managing 50+ staff and 6M SAR supply operations.', 'TrendingUp', ARRAY['Team structuring and hiring blueprints', 'Service agency sales and lead gen strategy', 'Supply chain and client onboarding optimization']),
 ('ITSM Consulting (BMC Helix)', 'Specialized enterprise consulting for BMC Helix ITSM systems, workflow stabilization, upgrades, and ITIL culture enablement.', 'Settings', ARRAY['System architecture audit and bug fixing', 'ITIL aligned culture development', 'BMC Helix upgrade roadmap & deployment support']),
 ('Brand & Product UX Design', 'Premium user experience design, wireframing, e-commerce stores, and cohesive branding blueprints that connect with global markets.', 'Framer', ARRAY['High-converting UX wireframes and mockups', 'Comprehensive brand books and guidelines', 'E-commerce platform optimization (Shopify, Custom)']);
+
+
+-- 5. Create Profile Settings Table
+CREATE TABLE IF NOT EXISTS profile_settings (
+    key TEXT PRIMARY KEY,
+    value JSONB NOT NULL
+);
+
+-- Enable RLS
+ALTER TABLE profile_settings ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Allow public read access on settings" ON profile_settings FOR SELECT USING (true);
+CREATE POLICY "Allow authenticated write access on settings" ON profile_settings FOR ALL USING (auth.role() = 'authenticated');
+
+-- Seed settings
+INSERT INTO profile_settings (key, value) VALUES
+('nav_links', '[
+  {"label": "Home", "path": "/"},
+  {"label": "About", "path": "/about"},
+  {"label": "Portfolio", "path": "/portfolio"},
+  {"label": "Labs", "path": "/#labs-section"},
+  {"label": "Newsletter", "path": "/#newsletter-section"}
+]'::jsonb),
+('consultation_label', '"Book a Consultation"'::jsonb),
+('consultation_path', '"#newsletter-section"'::jsonb),
+('hero_image_url', '"/src/assets/hero.png"'::jsonb),
+('hero_headline', '"Building the Future of Digital Systems."'::jsonb),
+('hero_subheadline', '"Entrepreneur, Designer, and Systems Architect."'::jsonb),
+('hero_button_label', '"Book a call"'::jsonb),
+('hero_button_path', '"#newsletter-section"'::jsonb),
+('stats', '[
+  {"id": "01", "value": "8+", "label": "Years Experience", "subtext": "In enterprise operations"},
+  {"id": "02", "value": "50+", "label": "Team Members", "subtext": "Managed at Teckflux"},
+  {"id": "03", "value": "6M SAR", "label": "ARR Scaled", "subtext": "At Najoom Al Falah"},
+  {"id": "04", "value": "100%", "label": "SLA Met", "subtext": "For GASCO Helix ITSM"}
+]'::jsonb)
+ON CONFLICT (key) DO UPDATE SET value = EXCLUDED.value;
+
