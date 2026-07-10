@@ -185,6 +185,7 @@ const defaultSettings = {
   analytics_title: 'Analytics Growth',
   animations_enabled: true,
   animation_duration_ms: 800,
+  maintenance_mode: true,
   stats: [
     { id: '01', value: '8+', label: 'Years Experience', subtext: 'In enterprise operations' },
     { id: '02', value: '50+', label: 'Team Members', subtext: 'Managed at Teckflux' },

@@ -28,6 +28,7 @@ export default function Admin() {
     analytics_title: '',
     animations_enabled: true,
     animation_duration_ms: 800,
+    maintenance_mode: true,
     consultation_label: '',
     consultation_path: '',
     nav_links: [],
@@ -786,6 +787,28 @@ export default function Admin() {
 
             <form onSubmit={handleSaveSettings} className="admin-form">
               
+              {/* MAINTENANCE & COMING SOON TOGGLE */}
+              <div style={{ borderBottom: '1px solid rgba(251, 191, 36, 0.2)', paddingBottom: '1.25rem', marginBottom: '1.5rem', background: 'rgba(251, 191, 36, 0.05)', border: '1px solid rgba(251, 191, 36, 0.2)', padding: '1.25rem', borderRadius: '12px' }}>
+                <h4 style={{ color: '#d97706', marginBottom: '0.75rem', display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '1rem', fontWeight: 800 }}>
+                  ⚠️ Under Construction / Coming Soon Mode
+                </h4>
+                <div className="form-group" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', margin: 0 }}>
+                  <input
+                    type="checkbox"
+                    id="m_mode"
+                    checked={settingsForm.maintenance_mode}
+                    onChange={(e) => setSettingsForm({ ...settingsForm, maintenance_mode: e.target.checked })}
+                    style={{ width: '20px', height: '20px', cursor: 'pointer' }}
+                  />
+                  <label htmlFor="m_mode" style={{ cursor: 'pointer', margin: 0, fontWeight: 700, color: '#0f172a' }}>
+                    Enable "Coming Soon" Landing Screen (Blocks public access to Home, About, Portfolio)
+                  </label>
+                </div>
+                <p style={{ fontSize: '0.75rem', color: '#64748b', marginTop: '0.5rem', marginLeft: '1.75rem' }}>
+                  Check this to hide the website content from public visitors. Uncheck it when you are ready to launch!
+                </p>
+              </div>
+
               {/* IMAGE UPLOADER */}
               <div style={{ borderBottom: '1px solid var(--border-light)', paddingBottom: '1.5rem', marginBottom: '1.5rem' }}>
                 <h4 style={{ marginBottom: '1rem' }}>Hero Profile Portrait</h4>
