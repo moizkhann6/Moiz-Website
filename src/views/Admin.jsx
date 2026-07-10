@@ -26,6 +26,8 @@ export default function Admin() {
     profile_phone: '',
     profile_email: '',
     analytics_title: '',
+    animations_enabled: true,
+    animation_duration_ms: 800,
     consultation_label: '',
     consultation_path: '',
     nav_links: [],
@@ -1030,6 +1032,49 @@ export default function Admin() {
                     required
                   />
                 </div>
+              </div>
+
+              {/* MOTION DESIGN & ANIMATIONS PANEL */}
+              <div style={{ borderBottom: '1px solid var(--border-light)', paddingBottom: '1.5rem', marginBottom: '1.5rem' }}>
+                <h4 style={{ marginBottom: '1rem' }}>Motion Design & Animations</h4>
+                <div className="form-group" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1rem' }}>
+                  <input
+                    type="checkbox"
+                    id="m_enabled"
+                    checked={settingsForm.animations_enabled}
+                    onChange={(e) => setSettingsForm({ ...settingsForm, animations_enabled: e.target.checked })}
+                    style={{ width: '20px', height: '20px', cursor: 'pointer' }}
+                  />
+                  <label htmlFor="m_enabled" style={{ cursor: 'pointer', margin: 0, fontWeight: 700 }}>
+                    Enable Global Site Animations (Entrance reveals, scroll triggers, magnetic pulls)
+                  </label>
+                </div>
+                
+                {settingsForm.animations_enabled && (
+                  <div className="form-group">
+                    <label htmlFor="m_duration">
+                      Animation Transition Duration: <strong style={{ color: 'var(--primary)' }}>{settingsForm.animation_duration_ms}ms</strong>
+                    </label>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginTop: '0.5rem' }}>
+                      <input
+                        type="range"
+                        id="m_duration"
+                        min="300"
+                        max="2000"
+                        step="50"
+                        value={settingsForm.animation_duration_ms || 800}
+                        onChange={(e) => setSettingsForm({ ...settingsForm, animation_duration_ms: parseInt(e.target.value) })}
+                        style={{ flex: 1, cursor: 'pointer' }}
+                      />
+                      <span style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', minWidth: '50px' }}>
+                        {settingsForm.animation_duration_ms || 800}ms
+                      </span>
+                    </div>
+                    <p style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginTop: '0.5rem' }}>
+                      Controls the slide-up speed and scale transition durations. Slower means smoother, faster means snappier.
+                    </p>
+                  </div>
+                )}
               </div>
 
               {/* NAVIGATION LINKS SECTION */}

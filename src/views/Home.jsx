@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Send, Mail, Check, Phone } from 'lucide-react';
 import { db } from '../lib/db';
+import { useMagnetic } from '../hooks/useMagnetic';
 
 export default function Home() {
   const [email, setEmail] = useState('');
@@ -23,6 +24,8 @@ export default function Home() {
     profile_phone: '+966500000000',
     profile_email: 'contact@moizriaz.net',
     analytics_title: 'Analytics Growth',
+    animations_enabled: true,
+    animation_duration_ms: 800,
     stats: [
       { id: '01', value: '8+', label: 'Years Experience', subtext: 'In enterprise operations' },
       { id: '02', value: '50+', label: 'Team Members', subtext: 'Managed at Teckflux' },
@@ -31,11 +34,33 @@ export default function Home() {
     ]
   });
 
+  // Load configuration settings
   useEffect(() => {
     db.getSettings().then(data => {
       if (data) setSettings(data);
     }).catch(err => console.error("Error loading home settings:", err));
   }, []);
+
+  // Performance-optimized Scroll Reveal Observer
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('revealed');
+          }
+        });
+      },
+      { threshold: 0.1, rootMargin: '0px 0px -50px 0px' }
+    );
+
+    const revealElements = document.querySelectorAll('.scroll-reveal');
+    revealElements.forEach((el) => observer.observe(el));
+
+    return () => {
+      revealElements.forEach((el) => observer.unobserve(el));
+    };
+  }, [settings.animations_enabled]); // Re-run if animations toggle state changes
 
   const handleSubscribe = (e) => {
     e.preventDefault();
@@ -46,6 +71,17 @@ export default function Home() {
         setEmail('');
       }, 5000);
     }
+  };
+
+  // Bind pointer tracking magnetic hooks
+  const magneticBookCall = useMagnetic(settings.animations_enabled);
+  const magneticPortfolio = useMagnetic(settings.animations_enabled);
+  const magneticCall = useMagnetic(settings.animations_enabled);
+  const magneticMail = useMagnetic(settings.animations_enabled);
+
+  // Dynamic animation classes selector
+  const getAnimClass = (className) => {
+    return settings.animations_enabled ? className : '';
   };
 
   const experienceDeck = [
@@ -92,7 +128,10 @@ export default function Home() {
   ];
 
   return (
-    <div className="home-view animate-fade-in">
+    <div 
+      className="home-view animate-fade-in"
+      style={settings.animations_enabled ? { '--anim-duration': `${settings.animation_duration_ms}ms` } : {}}
+    >
       
       {/* SPLIT HERO SECTION */}
       <section className="hero-section-flat">
@@ -100,22 +139,32 @@ export default function Home() {
           <div className="hero-split-grid">
             
             {/* Left Content Column */}
-            <div className="hero-content-left animate-slide-up">
-              <span className="about-badge">{settings.hero_badge_text}</span>
-              <h1>{settings.hero_headline}</h1>
-              <p className="hero-sub">{settings.hero_subheadline}</p>
+            <div className="hero-content-left">
+              <span className={`about-badge ${getAnimClass('entrance-badge')}`}>
+                {settings.hero_badge_text}
+              </span>
+              <h1 className={getAnimClass('entrance-headline')}>{settings.hero_headline}</h1>
+              <p className={`hero-sub ${getAnimClass('entrance-sub')}`}>{settings.hero_subheadline}</p>
               
-              <div className="hero-actions-row">
-                <a href={settings.hero_button_path} className="btn-mint">
+              <div className={`hero-actions-row ${getAnimClass('entrance-ctas')}`}>
+                <a 
+                  ref={magneticBookCall}
+                  href={settings.hero_button_path} 
+                  className="btn-mint"
+                >
                   <span>{settings.hero_button_label}</span> <ArrowRight size={16} />
                 </a>
-                <Link to="/portfolio" className="btn-bordered">
+                <Link 
+                  ref={magneticPortfolio}
+                  to="/portfolio" 
+                  className="btn-bordered"
+                >
                   Work with me
                 </Link>
               </div>
 
               {/* Trusted Partners Monochrome list */}
-              <div className="partners-section-inline">
+              <div className={`partners-section-inline ${getAnimClass('entrance-partners')}`}>
                 <p>{settings.partners_title}</p>
                 <div className="partners-logo-row">
                   <span className="partner-logo-svg">Aramco</span>
@@ -127,7 +176,7 @@ export default function Home() {
             </div>
             
             {/* Right Overlapping Cards Portrait Column */}
-            <div className="hero-right-side animate-fade-in">
+            <div className={`hero-right-side ${getAnimClass('entrance-portrait')}`}>
               <div className="hero-portrait-bg">
                 <img className="hero-portrait-img" src={settings.hero_image_url} alt={settings.profile_name} />
                 
@@ -145,10 +194,18 @@ export default function Home() {
                     Contact: <a href={settings.profile_link_path}>{settings.profile_link_text}</a>
                   </div>
                   <div className="contact-actions">
-                    <a href={`tel:${settings.profile_phone}`} className="btn-contact-action call">
+                    <a 
+                      ref={magneticCall}
+                      href={`tel:${settings.profile_phone}`} 
+                      className="btn-contact-action call"
+                    >
                       <Phone size={11} /> Call
                     </a>
-                    <a href={`mailto:${settings.profile_email}`} className="btn-contact-action">
+                    <a 
+                      ref={magneticMail}
+                      href={`mailto:${settings.profile_email}`} 
+                      className="btn-contact-action"
+                    >
                       <Mail size={11} /> Mail
                     </a>
                   </div>
@@ -175,7 +232,7 @@ export default function Home() {
       </section>
 
       {/* CLIENT BRANDS (Infinite Unlimited Scrolling Marquee) */}
-      <section className="brands-flat">
+      <section className={`brands-flat scroll-reveal`}>
         <div className="container">
           <h2 className="section-title-flat">Select Client Engagements</h2>
         </div>
@@ -205,7 +262,7 @@ export default function Home() {
       </section>
 
       {/* INTERACTIVE EXPERIENCE DECK */}
-      <section className="timeline-flat-section">
+      <section className={`timeline-flat-section scroll-reveal`}>
         <div className="container">
           <h2 className="section-title-flat">Career Focus & Milestones</h2>
           
@@ -250,7 +307,7 @@ export default function Home() {
       </section>
 
       {/* NEWSLETTER SECTION */}
-      <section className="newsletter-section" id="newsletter-section">
+      <section className={`newsletter-section scroll-reveal`}>
         <div className="container">
           <div className="newsletter-box-flat">
             <h2>Building in Public.</h2>

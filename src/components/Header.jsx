@@ -2,9 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { NavLink, Link } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
 import { db } from '../lib/db';
+import { useMagnetic } from '../hooks/useMagnetic';
 
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const [settings, setSettings] = useState({
     nav_links: [
       { label: 'Home', path: '/' },
@@ -14,8 +16,22 @@ export default function Header() {
       { label: 'Newsletter', path: '/#newsletter-section' }
     ],
     consultation_label: 'Book a Consultation',
-    consultation_path: '#newsletter-section'
+    consultation_path: '#newsletter-section',
+    animations_enabled: true
   });
+
+  // Track window scroll offset to trigger shrinking effect
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 30) {
+        setScrolled(true);
+      } else {
+        setScrolled(false);
+      }
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   useEffect(() => {
     db.getSettings().then(data => {
@@ -25,6 +41,9 @@ export default function Header() {
 
   const toggleMenu = () => setIsOpen(!isOpen);
   const closeMenu = () => setIsOpen(false);
+
+  // Apply cursor magnetic pull factor
+  const magneticRef = useMagnetic(settings.animations_enabled);
 
   // Helper to handle external vs internal paths
   const renderLink = (link, isMobile = false) => {
@@ -61,7 +80,7 @@ export default function Header() {
   };
 
   return (
-    <header className="navbar">
+    <header className={`navbar ${scrolled ? 'shrunk' : ''}`}>
       <div className="container nav-container">
         {/* Brand Logo */}
         <Link to="/" className="logo" onClick={closeMenu}>
@@ -77,7 +96,11 @@ export default function Header() {
 
         {/* Right CTA Button (Desktop) */}
         <div className="desktop-only">
-          <a href={settings.consultation_path} className="btn-consultation">
+          <a 
+            ref={magneticRef}
+            href={settings.consultation_path} 
+            className="btn-consultation"
+          >
             {settings.consultation_label}
           </a>
         </div>
@@ -89,7 +112,7 @@ export default function Header() {
 
         {/* Mobile Nav Overlay Menu */}
         {isOpen && (
-          <div className="mobile-nav-overlay">
+          <div className="mobile-nav-overlay animate-fade-in">
             <nav className="mobile-nav-links">
               {settings.nav_links.map(link => renderLink(link, true))}
               <a 
@@ -132,29 +155,32 @@ export default function Header() {
 
           .mobile-nav-overlay {
             position: fixed;
-            top: 70px;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: var(--bg-primary);
+            top: 85px;
+            left: 5%;
+            right: 5%;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(15, 23, 42, 0.08);
+            border-radius: 20px;
+            box-shadow: 0 20px 45px rgba(15, 23, 42, 0.08);
             z-index: 999;
             display: flex;
             align-items: flex-start;
-            padding: 3rem 2rem;
-            border-top: 1px solid var(--border-light);
+            padding: 2.5rem 2rem;
           }
 
           .mobile-nav-links {
             display: flex;
             flex-direction: column;
             align-items: flex-start;
-            gap: 1.75rem;
+            gap: 1.5rem;
             width: 100%;
           }
 
           .mobile-nav-link {
             font-family: var(--font-heading);
-            font-size: 1.25rem;
+            font-size: 1.15rem;
             font-weight: 700;
             color: var(--text-secondary);
             width: 100%;

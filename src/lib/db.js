@@ -183,6 +183,8 @@ const defaultSettings = {
   profile_phone: '+966500000000',
   profile_email: 'contact@moizriaz.net',
   analytics_title: 'Analytics Growth',
+  animations_enabled: true,
+  animation_duration_ms: 800,
   stats: [
     { id: '01', value: '8+', label: 'Years Experience', subtext: 'In enterprise operations' },
     { id: '02', value: '50+', label: 'Team Members', subtext: 'Managed at Teckflux' },
